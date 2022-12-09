@@ -11,7 +11,7 @@ import cv2
 app = Flask(__name__)
 
 #load model using pickle
-model = pickle.load(open('model50.pkl', 'rb'))
+model = pickle.load(open('model.pkl', 'rb'))
 model.eval()
 
 @app.route('/', methods=['GET'])
@@ -62,7 +62,7 @@ def predict():
         # Make prediction
         pred = model_predict(img, model).detach().cpu().item()
         if (pred == 0):
-            result = "good condition"
+            result = "undamaged"
         else:
             result = "damaged"
         

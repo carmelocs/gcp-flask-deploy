@@ -6,13 +6,24 @@ import numpy as np
 from util import base64_to_pil
 import torch
 import cv2
+from torchvision import models
+import torch.nn as nn
 
 # Running the flask app
 app = Flask(__name__)
 
+DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+
 #load model using pickle
-model = pickle.load(open('model.pkl', 'rb'))
+# model = pickle.load(open('model.pkl', 'rb'))
+
+model = models.resnet18()
+model.fc = nn.Linear(model.fc.in_features, 2)
+
+model.load_state_dict(torch.load("./best_model_resnet18.pt", map_location=DEVICE))
+
 model.eval()
+model.to(DEVICE)
 
 @app.route('/', methods=['GET'])
 def home():
